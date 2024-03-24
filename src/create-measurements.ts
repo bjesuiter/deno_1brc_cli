@@ -454,7 +454,7 @@ export const weatherStations = [
  * @param count The number of measurements to create
  */
 export function createMeasurements(countIn: number) {
-  const count = z.number().int().parse(countIn);
+  const count = z.number().int().positive().parse(countIn);
   console.time("create_measurements");
 
   console.timeEnd("create_measurements");
