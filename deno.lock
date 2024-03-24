@@ -1,0 +1,15 @@
+{
+  "version": "3",
+  "packages": {
+    "specifiers": {
+      "npm:random-js@2.1.0": "npm:random-js@2.1.0"
+    },
+    "npm": {
+      "random-js@2.1.0": {
+        "integrity": "sha512-CRUyWmnzmZBA7RZSVGq0xMqmgCyPPxbiKNLFA5ud7KenojVX2s7Gv+V7eB52beKTPGxWRnVZ7D/tCIgYJJ8vNQ==",
+        "dependencies": {}
+      }
+    }
+  },
+  "remote": {}
+}
