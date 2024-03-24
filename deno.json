@@ -5,7 +5,8 @@
 		"debug": "deno run --inspect-brk --allow-write main.ts",
 		"bench": "deno bench --allow-write",
 		"test": "deno test --allow-write",
-		"test-debug": "deno test --allow-write --inspect-brk"
+		"test-debug": "deno test --allow-write --inspect-brk",
+		"test-500tsd": "deno run --allow-write --inspect-brk ./test/500tsd.ts"
 	},
 	"imports": {
 		"random-js": "npm:random-js@2.1.0",
