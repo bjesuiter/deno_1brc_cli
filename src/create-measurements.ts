@@ -506,7 +506,9 @@ export async function createMeasurements(
   }
 
   if (withLogging) {
-    console.info(`Wrote ${count} measurements to ${measurementsFile}`);
+    console.info(
+      `Wrote ${count.toLocaleString("en")} measurements to ${measurementsFile}`,
+    );
   }
   if (withLogging) console.timeEnd(MEASUREMENT_TIMER);
 }
