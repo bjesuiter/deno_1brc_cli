@@ -1,2 +1,5 @@
 measurements.txt
-*.bench.txt
+
+# ignore anything in out dir
+out/*
+!out/.gitkeep
