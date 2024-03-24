@@ -8,13 +8,13 @@ Deno.test("create 50_000 measurements", async (b) => {
   });
 });
 
-// Deno.test("create 500_000 measurements", async (b) => {
-//   const count = 500_000;
-//   await createMeasurements(count, {
-//     measurementsFile: `./out/${count.toLocaleString("en")}.test.txt`,
-//     withLogging: true,
-//   });
-// });
+Deno.test.only("create 500_000 measurements", async (b) => {
+  const count = 500_000;
+  await createMeasurements(count, {
+    measurementsFile: `./out/${count.toLocaleString("en")}.test.txt`,
+    withLogging: true,
+  });
+});
 
 // // took 54872ms! :O
 // Deno.test("create 5_000_000 measurements", async (b) => {
