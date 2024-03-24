@@ -1,5 +1,9 @@
 {
-  "tasks": {
-    "dev": "deno run --watch main.ts"
-  }
+	"tasks": {
+		"dev": "deno run --watch main.ts"
+	},
+	"imports": {
+		"random-js": "npm:random-js@2.1.0",
+		"zod": "https://deno.land/x/zod@v3.22.4/mod.ts"
+	}
 }
