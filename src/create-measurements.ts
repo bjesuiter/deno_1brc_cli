@@ -1,4 +1,4 @@
-import { MersenneTwister19937, real } from "random-js";
+import { integer, MersenneTwister19937, real } from "random-js";
 import { z } from "zod";
 
 // NOTE: You can make the random number generator more predictable by seeding it with a fixed value.
@@ -450,12 +450,50 @@ export const weatherStations = [
   new WeatherStation("Zürich", 9.3),
 ];
 
+const randomStationSelector = integer(0, weatherStations.length - 1);
+
 /**
  * @param count The number of measurements to create
  */
-export function createMeasurements(countIn: number) {
+export async function createMeasurements(
+  countIn: number,
+  measurementsFile = "./measurements.txt",
+) {
   const count = z.number().int().positive().parse(countIn);
   console.time("create_measurements");
 
+  try {
+    const outFile = await Deno.open(measurementsFile, {
+      create: true,
+      append: true,
+    });
+
+    const outputWriter = outFile.writable.getWriter();
+    await outputWriter.ready;
+
+    // default UTF-8 encoder
+    const encoder = new TextEncoder();
+
+    for (let i = 0; i < count; i++) {
+      // Status-Log
+      if (i > 0 && i % 50_000_000 === 0) {
+        console.timeLog(`create_measurements`, `Generated ${i} measurements`);
+      }
+
+      const station = weatherStations[randomStationSelector(engine)];
+      const temperature = station.measurement();
+      const line = `${station.id},${temperature.toFixed(1)}\n`;
+      await outputWriter.write(encoder.encode(line));
+    }
+
+    await outputWriter.close();
+  } catch (error) {
+    console.error(
+      `Error writing to measurements file "${measurementsFile}": ${error}`,
+    );
+    return;
+  }
+
+  console.info(`Wrote ${count} measurements to ${measurementsFile}`);
   console.timeEnd("create_measurements");
 }
