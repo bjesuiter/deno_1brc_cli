@@ -457,7 +457,7 @@ const Options = z.object({
   withLogging: z.boolean().default(true),
 });
 
-const MEASUREMENT_TIMER = "Create Measurements Timer:";
+const MEASUREMENT_TIMER = "Create Measurements Timer";
 
 type Options = z.infer<typeof Options>;
 
