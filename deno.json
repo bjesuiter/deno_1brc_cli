@@ -2,7 +2,8 @@
 	"tasks": {
 		"start": "deno run --allow-write main.ts",
 		"dev": "deno run --watch main.ts",
-		"bench": "deno bench --allow-write"
+		"bench": "deno bench --allow-write",
+		"test": "deno test --allow-write"
 	},
 	"imports": {
 		"random-js": "npm:random-js@2.1.0",
