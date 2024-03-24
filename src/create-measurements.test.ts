@@ -13,6 +13,7 @@ Deno.test.only("create 500_000 measurements", async (b) => {
   await createMeasurements(count, {
     measurementsFile: `./out/${count.toLocaleString("en")}.test.txt`,
     withLogging: true,
+    withProfiling: true,
   });
 });
 

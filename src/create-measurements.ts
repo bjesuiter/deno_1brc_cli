@@ -455,9 +455,11 @@ const randomStationSelector = integer(0, weatherStations.length - 1);
 const Options = z.object({
   measurementsFile: z.string().optional().default("./measurements.txt"),
   withLogging: z.boolean().default(true),
+  withProfiling: z.boolean().default(false),
 });
 
 const MEASUREMENT_TIMER = "Create Measurements Timer";
+const MEASUREMENT_PROFILING = "Measurements Profiling";
 
 type Options = z.infer<typeof Options>;
 
@@ -469,9 +471,9 @@ export async function createMeasurements(
   optionsIn?: Partial<Options>,
 ) {
   const count = z.number().int().positive().parse(countIn);
-  const { measurementsFile, withLogging } = Options.parse(optionsIn);
-
-  if (withLogging) console.time(MEASUREMENT_TIMER);
+  const { measurementsFile, withLogging, withProfiling } = Options.parse(
+    optionsIn,
+  );
 
   try {
     const outFile = await Deno.open(measurementsFile, {
@@ -485,6 +487,10 @@ export async function createMeasurements(
     // default UTF-8 encoder
     const encoder = new TextEncoder();
 
+    // start runtime logging & profiling
+    if (withLogging) console.time(MEASUREMENT_TIMER);
+    if (withProfiling) console.profile(MEASUREMENT_PROFILING);
+
     for (let i = 0; i < count; i++) {
       // Status-Log
       if (withLogging && i > 0 && i % 50_000_000 === 0) {
@@ -497,6 +503,17 @@ export async function createMeasurements(
       await outputWriter.write(encoder.encode(line));
     }
 
+    // stop runtime logging & profiling
+    if (withProfiling) console.profileEnd(MEASUREMENT_PROFILING);
+    if (withLogging) {
+      console.info(
+        `Wrote ${
+          count.toLocaleString("en")
+        } measurements to ${measurementsFile}`,
+      );
+      console.timeEnd(MEASUREMENT_TIMER);
+    }
+
     await outputWriter.close();
   } catch (error) {
     console.error(
@@ -504,11 +521,4 @@ export async function createMeasurements(
     );
     return;
   }
-
-  if (withLogging) {
-    console.info(
-      `Wrote ${count.toLocaleString("en")} measurements to ${measurementsFile}`,
-    );
-  }
-  if (withLogging) console.timeEnd(MEASUREMENT_TIMER);
 }
