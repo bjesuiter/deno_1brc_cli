@@ -452,15 +452,24 @@ export const weatherStations = [
 
 const randomStationSelector = integer(0, weatherStations.length - 1);
 
+const Options = z.object({
+  measurementsFile: z.string().optional().default("./measurements.txt"),
+  withLogging: z.boolean().default(true),
+});
+
+type Options = z.infer<typeof Options>;
+
 /**
  * @param count The number of measurements to create
  */
 export async function createMeasurements(
   countIn: number,
-  measurementsFile = "./measurements.txt",
+  optionsIn?: Partial<Options>,
 ) {
   const count = z.number().int().positive().parse(countIn);
-  console.time("create_measurements");
+  const { measurementsFile, withLogging } = Options.parse(optionsIn);
+
+  if (withLogging) console.time("create_measurements");
 
   try {
     const outFile = await Deno.open(measurementsFile, {
@@ -476,7 +485,7 @@ export async function createMeasurements(
 
     for (let i = 0; i < count; i++) {
       // Status-Log
-      if (i > 0 && i % 50_000_000 === 0) {
+      if (withLogging && i > 0 && i % 50_000_000 === 0) {
         console.timeLog(`create_measurements`, `Generated ${i} measurements`);
       }
 
@@ -494,6 +503,8 @@ export async function createMeasurements(
     return;
   }
 
-  console.info(`Wrote ${count} measurements to ${measurementsFile}`);
-  console.timeEnd("create_measurements");
+  if (withLogging) {
+    console.info(`Wrote ${count} measurements to ${measurementsFile}`);
+  }
+  if (withLogging) console.timeEnd("create_measurements");
 }
